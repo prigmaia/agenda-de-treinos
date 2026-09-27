@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diário de Treino — Ana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FCF6F1;
+    --surface: #FFFFFF;
+    --surface-soft: #F6ECE6;
+    --ink: #2E1F24;
+    --ink-soft: #6B5A60;
+    --primary: #B5495B;
+    --primary-ink: #FFFFFF;
+    --secondary: #4F6D5C;
+    --secondary-soft: #E6EEE9;
+    --gold: #C98A2E;
+    --gold-soft: #FBEEDA;
+    --border: #EADCD3;
+    --shadow: rgba(46, 31, 36, 0.08);
+    --radius: 20px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #211519;
+      --surface: #2B1C21;
+      --surface-soft: #33222A;
+      --ink: #F5E9EC;
+      --ink-soft: #C4ACB4;
+      --primary: #E38A9E;
+      --primary-ink: #2E1219;
+      --secondary: #93B6A2;
+      --secondary-soft: #2A3831;
+      --gold: #E6B366;
+      --gold-soft: #3A2E1D;
+      --border: #402C33;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #211519;
+    --surface: #2B1C21;
+    --surface-soft: #33222A;
+    --ink: #F5E9EC;
+    --ink-soft: #C4ACB4;
+    --primary: #E38A9E;
+    --primary-ink: #2E1219;
+    --secondary: #93B6A2;
+    --secondary-soft: #2A3831;
+    --gold: #E6B366;
+    --gold-soft: #3A2E1D;
+    --border: #402C33;
+    --shadow: rgba(0, 0, 0, 0.3);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; margin: 0; }
+
+  header.top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 22px;
+  }
+
+  .greeting h1 {
+    font-size: 1.9rem;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .greeting .date {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    margin-top: 4px;
+  }
+
+  .streak-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gold-soft);
+    color: var(--gold);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 26px;
+    box-shadow: 0 6px 24px var(--shadow);
+    margin-bottom: 20px;
+  }
+
+  .date-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .date-row label {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+  }
+  .date-row input[type="date"] {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--ink);
+    background: var(--surface-soft);
+  }
+  .date-row input[type="date"]:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+
+  .prompt {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+
+  .choice-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .choice-btn {
+    border: 1.5px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--ink);
+    padding: 16px 12px;
+    border-radius: 14px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.02rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .choice-btn:hover { transform: translateY(-1px); }
+  .choice-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+  .choice-btn.yes.selected {
+    background: var(--primary);
+    color: var(--primary-ink);
+    border-color: var(--primary);
+  }
+  .choice-btn.no.selected {
+    background: var(--secondary);
+    color: #FFFFFF;
+    border-color: var(--secondary);
+  }
+
+  .followup { margin-top: 20px; display: none; }
+  .followup.visible { display: block; animation: rise 0.35s ease; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .followup label {
+    display: block;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 90px;
+    resize: vertical;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 0.98rem;
+    color: var(--ink);
+    background: var(--surface);
+  }
+  textarea:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+
+  .save-btn {
+    margin-top: 14px;
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .save-btn:active { transform: scale(0.99); }
+  .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .message-box {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.08rem;
+    line-height: 1.5;
+    display: none;
+  }
+  .message-box.visible { display: block; animation: rise 0.4s ease; }
+  .message-box.yes { background: var(--gold-soft); color: var(--gold); }
+  .message-box.no { background: var(--secondary-soft); color: var(--secondary); }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 30px 0 12px 4px;
+    color: var(--ink);
+  }
+
+  .entry {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 3px 12px var(--shadow);
+  }
+  .entry-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .entry-date { font-size: 0.85rem; color: var(--ink-soft); }
+  .entry-tag {
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .entry-tag.yes { background: var(--gold-soft); color: var(--gold); }
+  .entry-tag.no { background: var(--secondary-soft); color: var(--secondary); }
+  .entry-note { font-size: 0.94rem; color: var(--ink); line-height: 1.4; }
+
+  .empty {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    text-align: center;
+    padding: 24px 10px;
+    font-style: italic;
+  }
+
+  .wrap-x { overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="top">
+    <div class="greeting">
+      <h1>Oi, Ana ✦</h1>
+      <div class="date" id="todayLabel"></div>
+    </div>
+    <div class="streak-pill" id="streakPill">🔥 0 dias</div>
+  </header>
+
+  <div class="card">
+    <div class="date-row">
+      <label for="entryDate">Registrar o dia</label>
+      <input type="date" id="entryDate">
+    </div>
+    <div class="prompt" id="promptText">Você treinou hoje?</div>
+    <div class="choice-row">
+      <button class="choice-btn yes" id="btnYes" type="button">Sim, treinei</button>
+      <button class="choice-btn no" id="btnNo" type="button">Hoje não</button>
+    </div>
+
+    <div class="followup" id="followupYes">
+      <label for="howWasIt">Como foi o treino?</label>
+      <textarea id="howWasIt" placeholder="Ex: pesada, mas terminei a série toda de pernas..."></textarea>
+      <button class="save-btn" id="saveYes" type="button">Salvar treino</button>
+      <div class="message-box yes" id="msgYes"></div>
+    </div>
+
+    <div class="followup" id="followupNo">
+      <label for="howFeeling">Como você está se sentindo?</label>
+      <textarea id="howFeeling" placeholder="Ex: cansada, sem tempo hoje, meio desmotivada..."></textarea>
+      <button class="save-btn" id="saveNo" type="button">Salvar</button>
+      <div class="message-box no" id="msgNo"></div>
+    </div>
+  </div>
+
+  <div class="section-title">Histórico</div>
+  <div id="history"></div>
+
+</div>
+
+<script>
+(function () {
+  const STORAGE_KEY = 'ana-diario-treino-entries';
+  const todayLabel = document.getElementById('todayLabel');
+  const streakPill = document.getElementById('streakPill');
+  const btnYes = document.getElementById('btnYes');
+  const btnNo = document.getElementById('btnNo');
+  const followupYes = document.getElementById('followupYes');
+  const followupNo = document.getElementById('followupNo');
+  const howWasIt = document.getElementById('howWasIt');
+  const howFeeling = document.getElementById('howFeeling');
+  const saveYes = document.getElementById('saveYes');
+  const saveNo = document.getElementById('saveNo');
+  const msgYes = document.getElementById('msgYes');
+  const msgNo = document.getElementById('msgNo');
+  const historyEl = document.getElementById('history');
+  const entryDateInput = document.getElementById('entryDate');
+  const promptText = document.getElementById('promptText');
+
+  const MESSAGES_TRAINED = [
+    "Mais um dia que você escolheu se cuidar, Ana. Isso vale muito.",
+    "Cada treino é um tijolo. Você já construiu bastante coisa boa.",
+    "Você apareceu hoje. Isso já é a parte mais difícil, e você venceu.",
+    "Orgulho de você. Constância é mais forte que motivação, e você tem as duas.",
+    "Isso aqui é disciplina de gente que sabe o que quer. Continue assim.",
+    "Nem todo dia é fácil treinar, mas hoje você fez do jeito certo: foi.",
+    "Treino feito é vitória guardada. Guarda essa também.",
+    "Level up desbloqueado. Sua barra de experiência subiu mais um pouco hoje.",
+    "Isso foi tipo aquela cena de treino de anime, música épica tocando e tudo. Você venceu o episódio de hoje.",
+    "Personagem principal de verdade não pula o próprio arco de treino. Você não pulou.",
+    "Se seu bichinho pudesse comemorar contigo agora, ia estar fazendo a maior festa.",
+    "Missão do dia: concluída. Próxima side quest te espera amanhã."
+  ];
+
+  const MESSAGES_NOT_TRAINED = [
+    "Um dia sem treinar não apaga nada do que você já construiu, Ana.",
+    "Descansar também é cuidar de você. Amanhã tem um novo dia pra treinar.",
+    "Sentir isso é normal. O importante é que você continua no jogo.",
+    "Você não precisa ser perfeita, só precisa continuar tentando. E você continua.",
+    "Hoje foi assim, e tudo bem. O que importa é o conjunto, não um dia isolado.",
+    "Cansaço também é informação do corpo. Ouça ele, se recupere, volte com calma.",
+    "Nenhum progresso é linear. Essa pausa faz parte do caminho, não é o fim dele.",
+    "Amanhã é uma página nova. Hoje, só respira e descansa.",
+    "Até o herói mais forte de qualquer desenho precisa de um episódio de descanso.",
+    "Save do jogo feito. Você pode voltar de onde parou quando quiser, sem culpa.",
+    "Enrola numa manta, chama seu bichinho pra perto e recarrega a energia hoje.",
+    "Nem todo dia é de treino puxado. Alguns dias são só de sobreviver, e tá ótimo assim."
+  ];
+
+  function pickMessage(list) {
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
+  function loadEntries() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveEntries(entries) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    } catch (e) {
+      console.error('Não foi possível salvar localmente:', e);
+    }
+  }
+
+  function todayISO() {
+    const d = new Date();
+    return d.toISOString().slice(0, 10);
+  }
+
+  function selectedDate() {
+    return entryDateInput.value || todayISO();
+  }
+
+  entryDateInput.max = todayISO();
+  entryDateInput.value = todayISO();
+
+  function formatDateLabel(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
+  }
+
+  function formatShort(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  }
+
+  let entries = loadEntries();
+
+  function upsertEntry(entry) {
+    const idx = entries.findIndex(e => e.date === entry.date);
+    if (idx >= 0) entries[idx] = entry; else entries.push(entry);
+    entries.sort((a, b) => a.date < b.date ? 1 : -1);
+    saveEntries(entries);
+  }
+
+  function computeStreak() {
+    const sorted = [...entries].sort((a, b) => a.date < b.date ? 1 : -1);
+    let streak = 0;
+    for (const e of sorted) {
+      if (e.status === 'sim') streak++; else break;
+    }
+    return streak;
+  }
+
+  function renderStreak() {
+    const streak = computeStreak();
+    streakPill.textContent = '🔥 ' + streak + (streak === 1 ? ' dia' : ' dias');
+  }
+
+  function renderHistory() {
+    if (entries.length === 0) {
+      historyEl.innerHTML = '<div class="empty">Seu histórico vai aparecer aqui assim que você registrar o primeiro dia.</div>';
+      return;
+    }
+    historyEl.innerHTML = '';
+    entries.forEach(e => {
+      const div = document.createElement('div');
+      div.className = 'entry';
+      const tagClass = e.status === 'sim' ? 'yes' : 'no';
+      const tagLabel = e.status === 'sim' ? 'Treinou' : 'Descanso';
+      div.innerHTML = `
+        <div class="entry-top">
+          <span class="entry-date">${formatShort(e.date)}</span>
+          <span class="entry-tag ${tagClass}">${tagLabel}</span>
+        </div>
+        <div class="entry-note">${e.note ? escapeHtml(e.note) : '<em>sem anotação</em>'}</div>
+      `;
+      historyEl.appendChild(div);
+    });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function selectChoice(choice) {
+    btnYes.classList.toggle('selected', choice === 'sim');
+    btnNo.classList.toggle('selected', choice === 'nao');
+    followupYes.classList.toggle('visible', choice === 'sim');
+    followupNo.classList.toggle('visible', choice === 'nao');
+    msgYes.classList.remove('visible');
+    msgNo.classList.remove('visible');
+
+    const existing = entries.find(e => e.date === selectedDate());
+    howWasIt.value = existing && existing.status === 'sim' ? existing.note : '';
+    howFeeling.value = existing && existing.status === 'nao' ? existing.note : '';
+  }
+
+  function updatePromptText() {
+    promptText.textContent = selectedDate() === todayISO()
+      ? 'Você treinou hoje?'
+      : 'Você treinou nesse dia?';
+  }
+
+  function loadForSelectedDate() {
+    updatePromptText();
+    msgYes.classList.remove('visible');
+    msgNo.classList.remove('visible');
+    const existing = entries.find(e => e.date === selectedDate());
+    if (existing) {
+      selectChoice(existing.status);
+    } else {
+      btnYes.classList.remove('selected');
+      btnNo.classList.remove('selected');
+      followupYes.classList.remove('visible');
+      followupNo.classList.remove('visible');
+      howWasIt.value = '';
+      howFeeling.value = '';
+    }
+  }
+
+  entryDateInput.addEventListener('change', loadForSelectedDate);
+
+  btnYes.addEventListener('click', () => selectChoice('sim'));
+  btnNo.addEventListener('click', () => selectChoice('nao'));
+
+  saveYes.addEventListener('click', () => {
+    const note = howWasIt.value.trim();
+    upsertEntry({ date: selectedDate(), status: 'sim', note });
+    const msg = pickMessage(MESSAGES_TRAINED);
+    msgYes.textContent = msg;
+    msgYes.classList.add('visible');
+    renderStreak();
+    renderHistory();
+  });
+
+  saveNo.addEventListener('click', () => {
+    const note = howFeeling.value.trim();
+    upsertEntry({ date: selectedDate(), status: 'nao', note });
+    const msg = pickMessage(MESSAGES_NOT_TRAINED);
+    msgNo.textContent = msg;
+    msgNo.classList.add('visible');
+    renderStreak();
+    renderHistory();
+  });
+
+  todayLabel.textContent = formatDateLabel(todayISO());
+  renderStreak();
+  renderHistory();
+  loadForSelectedDate();
+})();
+</script>
+</body>
+</html>
